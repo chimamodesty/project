@@ -1,0 +1,23 @@
+body  {
+  background-color: #fff;
+  margin: 40px;
+  font: 14px/20px normal Helvetica, Arial, sans-serif;
+  color: #4F5155;
+}
+
+ul {
+  list-style-type: none;
+  margin: 8px 10px;
+  padding: 0;
+}
+
+input, select, button {
+  padding: 5px 10px;
+  margin: 8px 10px;
+  border-radius: 5px;
+}
+
+#result1, #result2 {
+  
+  padding: 10px;
+}

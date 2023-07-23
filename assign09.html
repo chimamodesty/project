@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Week 09 AJAX Assignment</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+	<h3>AJAX Assignment</h3>
+
+	<form>
+		<ul style="list-style-type: none;">
+			<li>
+				<label for="country">Country</label>
+		<select id="country" name="country" onchange="getCities(this.options[this.selectedIndex].value)">
+				<option value="">--Select Country--</option>
+				<option value="canada">Canada</option>
+				<option value="mexico">Mexico</option>
+				<option value="russia">Russia</option>	
+				<option value="usa">USA</option>
+		</select>
+		</li>	
+		
+	</ul>
+	</form>
+	<div id="result1" style="margin-bottom: 30px; padding-left: 10px;"></div>
+
+  <label for="txtFile">File Name</label>
+	<input type="text" placeholder="example: json.txt" name="txtFile" id="jsonfile">
+	<button id="btn" onclick="getInfo(myFunction)">Get Info</button>
+	<div id="result2" style="margin-bottom: 30px; margin-top: 10px; padding-left: 10px;"></div>
+<script type="text/javascript">
+	let country = document.getElementById("country")
+	let result = document.getElementById("result1")
+	let result2 = document.getElementById("result2")
+
+	function getCities(val){
+		let resResult;
+
+		if (val === ""){
+			result.innerHTML = "Please select a country to view its largest cities"
+		}
+		else {
+   let counFile =`${val}.txt`
+			const xhttp = new XMLHttpRequest();
+  			xhttp.onreadystatechange = function() {
+    			if (this.readyState == 4 && this.status == 200) {
+            resp =  this.responseText
+      			result.innerHTML = (resp).split(/\r\n/).join("<br>");
+    			}
+  			};
+        xhttp.onprogress = function() {
+          // result.innerHTML = "Loading..."
+        }
+  			
+  			xhttp.open("GET", counFile, true);
+  			xhttp.send();
+		}
+	}
+ 
+ function getInfo(xFunction) {
+  var fileurl = document.getElementById('jsonfile').value
+	if (fileurl!==''){
+		const xhttp=new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				xFunction(this);
+			}
+			else if (this.readyState == 4 && this.status == 404) {
+				result2.innerHTML = "<h3 style='color: red;'>File not found</h3>"
+			}
+		}
+		// xhttp.onload = function() {xFunction(this);}
+		xhttp.open("GET", fileurl, true);
+		xhttp.setRequestHeader('Accept', 'application/json')
+		xhttp.send();
+
+	} else {
+		  
+		result2.innerHTML = "<em>Please enter a file name</em>"
+	}
+}
+
+function myFunction(xhttp) {
+  const res = JSON.parse(xhttp.responseText);
+	let resResult = '<table cellpadding="5" cellspacing="0" border="1">'
+	resResult += '<tr><th>First Name</th><th>Last Name</th><th>Address</th><th>Major</th><th>GPA</th></tr>'
+	for (let i = 0; i < res.students.length; i++) {
+		resResult += '<tr>'
+		resResult += '<td>' + res.students[i].first + '</td>'
+		resResult += '<td>' + res.students[i].last + '</td>'
+		resResult += '<td>' + res.students[i].address.city + ', '+ res.students[i].address.state +'</td>'
+		resResult += '<td>' + res.students[i].major + '</td>'
+		resResult += '<td>' + res.students[i].gpa + '</td>'
+		resResult += '</tr>'
+	}
+  // console.log(res.students.length)
+
+  result2.innerHTML =  resResult
+}
+	
+
+</script>
+</body>
+</html>
